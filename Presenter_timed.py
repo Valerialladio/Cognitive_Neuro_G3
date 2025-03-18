@@ -13,6 +13,18 @@ if participant_dialog.OK:
     participant_id = participant_dialog.data[0]
 else:
     core.quit()
+    
+# Define fullscreen window
+win = visual.Window(color=[-1, -1, -1], units="pix", fullscr=True)
+
+# Instruction Dialog
+consent_text = visual.TextStim(win, text="You will be asked to evaluate the semantic congruency of some sentences.\n\nPress the left arrow for coherent letters, and the right one for non-coherent. Press the up arrow if the sentence was too fast.\n\n Press spacebar to start or exit to exit the experiment",
+                               color="white", height=40, wrapWidth=800)
+consent_text.draw()
+win.flip()
+
+# Wait for participant to either consent or exit
+keys = event.waitKeys(keyList=['space', 'escape'])    
 
 # Load sentences from a text file, removing initial numbers
 with open("sentences.txt", "r", encoding="utf-8") as file:
@@ -49,15 +61,15 @@ for sentence in sentences:
             last_segment_time = core.getTime()  
 
     # Present rating screen
-    text_stim.text = "Rate the sentence:\n\nPress 'N' = Coherent\nPress 'M' = Non-Coherent\nPress 'L' = Too fast"
+    text_stim.text = "Rate the sentence:\n\nPress 'left arrow' = Coherent\nPress 'right arrow' = Non-Coherent\nPress 'up arrow' = Too fast"
     text_stim.draw()
     win.flip()
 
     # Wait for valid response and record reaction time
     response = None
-    while response not in ["n", "m", "l", "escape"]:
+    while response not in ["left", "right", "up", "escape"]:
         response_time = core.getTime()  # Get current time
-        response = event.waitKeys(keyList=["n", "m", "l", "escape"])[0]
+        response = event.waitKeys(keyList=["left", "right", "up", "escape"])[0]
 
     # Calculate reaction time (RT)
     rt = response_time - last_segment_time  
